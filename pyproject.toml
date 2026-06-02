@@ -1,16 +1,16 @@
 [project]
 name = "libbee"
-version = "0.1.0"
+version = "0.0.1"
 description = "US (American) public-library funding, usage, and operations + community civics data (1992–2023) — integrated from IMLS, Census, and HUD into one tidy `facts` table."
 readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"
 license-files = ["LICENSE"]
 authors = [
-    { name = "Leo Postovoit", email = "leo@postovoit.dev" },
+    { name = "Leo Postovoit", email = "leo@leopostovoit.com" },
 ]
 maintainers = [
-    { name = "Leo Postovoit", email = "leo@postovoit.dev" },
+    { name = "Leo Postovoit", email = "leo@leopostovoit.com" },
 ]
 keywords = [
     "public-libraries", "IMLS", "open-data", "data-product", "civic-data",
