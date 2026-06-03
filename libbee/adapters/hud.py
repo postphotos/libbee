@@ -36,7 +36,11 @@ class CountyHomeless(Adapter):
         build_county_homeless.main()
 
     def to_facts(self) -> pl.DataFrame:
-        names = load("county_equity").select(["fips", "NAME"])  # names broadcast across years
+        try:
+            names = load("county_equity").select(["fips", "NAME"])  # names broadcast across years
+        except FileNotFoundError:
+            # County equity table wasn't built (Census API key was missing); use empty names
+            names = pl.DataFrame({"fips": pl.Series([], dtype=pl.Utf8), "NAME": pl.Series([], dtype=pl.Utf8)})
         _st = pl.col("fips").str.slice(0, 2).replace_strict(FIPS2ST, default=None).alias("st")
         chl = load("county_homeless").rename({"spend_pc": "homeless_spend_pc"}).join(names, on="fips", how="inner").with_columns(_st)
         return melt(chl, "county", "fips", "NAME", self.source, year="year", state="st")

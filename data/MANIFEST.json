@@ -1,20 +1,12 @@
 {
   "raw_inputs": {
     "ca_libpas/ca_libpas_outlet_FY2023-24.html": {
-      "bytes": 1283708,
-      "sha256": "27c450e546215476301eefc7c41da649f09f564d514ec03302b10c3fd6e4d155"
+      "bytes": 1283709,
+      "sha256": "fdfed2acd842b4ea5c34ff75d264515d18568290d9af05c67e56454a68341409"
     },
     "census/acs5_2019_counties.json": {
       "bytes": 325915,
       "sha256": "b327a3819accac4d7580b59cf8476d1231cb10647738f4ffef6bfbdacca81f25"
-    },
-    "geo/us_10m.topojson": {
-      "bytes": 642361,
-      "sha256": "1f20340f18e02998937e1b086405ca6a16e6529e50af75d397452b695180164d"
-    },
-    "geo/us_states.geojson": {
-      "bytes": 89263,
-      "sha256": "6f23ed91fce2c25d57c01d83225342ba40258e9571c486c3999bd827c80d193b"
     },
     "hud/coc_awards.xlsx": {
       "bytes": 2183066,
@@ -31,30 +23,6 @@
     "hud/pit_coc.xlsb": {
       "bytes": 9914004,
       "sha256": "ae88fbb58dadfbfccc254619b714d37e0720bd9854a31a16ad0e381fa14959ed"
-    },
-    "imls/CSV/PLS_FY23_AE_pud23i.csv": {
-      "bytes": 8843042,
-      "sha256": "3e2a498c116e4a6a067c89fcbc3d73d99bca3adb3e832e861fbedb48c2306b6a"
-    },
-    "imls/CSV/README FY 2023 PLS PUD.txt": {
-      "bytes": 7548,
-      "sha256": "d7ec7aa36c87edc4e357ce8545002ba25eba5294dec964c52ab89fc9571c8f34"
-    },
-    "imls/CSV/pls_fy23_outlet_pud23i.csv": {
-      "bytes": 4418522,
-      "sha256": "2b4aad2fb91b0d29eaa51d0c0a1f934779f19c382247551a563df0540954fb68"
-    },
-    "imls/PUOUT92.csv": {
-      "bytes": 2086112,
-      "sha256": "5e7f2dd9a6d4af753545fd175f2b43dafcdcf52ef8636c5c66f30885c608f864"
-    },
-    "imls/PUPLDF92.csv": {
-      "bytes": 3239158,
-      "sha256": "afa5b3d1c405aba8a39ffe9ecfdb7b3ff5e62853d64a284242f4f742dc654ecd"
-    },
-    "imls/PUSUM92.csv": {
-      "bytes": 17859,
-      "sha256": "95ac8e417575b7d4e0fd90b217f5065b64d12708067d8f10c24d28b565d5ec55"
     },
     "imls/imls_1992.zip": {
       "bytes": 1632673,
@@ -183,30 +151,6 @@
     "imls/imls_2023.zip": {
       "bytes": 3679038,
       "sha256": "fc7e69c2f3106862b3ea163a96b3057181a74bfdc4463cde0f3e742cc655f8fe"
-    },
-    "imls/pls_fy1992.zip": {
-      "bytes": 1632673,
-      "sha256": "bb96e5cdfdbb4552a3a80260ad30754a8529f48f929c4796ace8a43de86aae02"
-    },
-    "imls/pls_fy2010.zip": {
-      "bytes": 2969798,
-      "sha256": "292f9b8d53ebf9633f584bd26a1a72d4262db41e3cdb56c24fa8fae6def7f8f6"
-    },
-    "imls/pls_fy2023_csv.zip": {
-      "bytes": 3679038,
-      "sha256": "fc7e69c2f3106862b3ea163a96b3057181a74bfdc4463cde0f3e742cc655f8fe"
-    },
-    "imls/puout10a.csv": {
-      "bytes": 3894344,
-      "sha256": "8cfedb4d28f17521b030315e37ccd75ac31b4930c4ec3e395e0ae744ea2810d5"
-    },
-    "imls/pupld10a.csv": {
-      "bytes": 7275570,
-      "sha256": "aed21f749d4f7eee53d9dd862d8fa555ec497e60d42b266293461b27a7d70a23"
-    },
-    "imls/pusum10a.csv": {
-      "bytes": 40366,
-      "sha256": "247b76f233e80513981507e0ce8d85c59eca50fd766895995a08f1d017cdd74b"
     }
   },
   "tables": {
@@ -252,8 +196,8 @@
     },
     "facts": {
       "cols": 8,
-      "rows": 722244,
-      "sha256": "c17a4a66667dd2c9f13f69ca72df9e04b8fdcac5cf87601f179ae55e815ee0bd"
+      "rows": 722256,
+      "sha256": "8d7543d0b0391ba9d3e9bc5610bd8107b0fc8285d92877f9698d7941030c8cac"
     },
     "geo_dim": {
       "cols": 4,
@@ -303,7 +247,7 @@
     "state_panel": {
       "cols": 15,
       "rows": 1706,
-      "sha256": "64559389886311cbb1b78dd2bf10f380c65535dfa8ab4492e33d9e6c876df275"
+      "sha256": "3a4d88a5d1a9e4d927d176f01a908bedac7f4f138b1bf67828a7c221adf171b1"
     }
   }
 }

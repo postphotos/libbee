@@ -57,7 +57,11 @@ class CountyPanel(Adapter):
         build_county_panel.main()
 
     def to_facts(self) -> pl.DataFrame:
-        names = load("county_equity").select(["fips", "NAME"])  # canonical names where we have them
+        try:
+            names = load("county_equity").select(["fips", "NAME"])  # canonical names where we have them
+        except FileNotFoundError:
+            # County equity table wasn't built (Census API key was missing); use empty names
+            names = pl.DataFrame({"fips": pl.Series([], dtype=pl.Utf8), "NAME": pl.Series([], dtype=pl.Utf8)})
         d = (
             load("county_panel")
             .join(names, on="fips", how="left")

@@ -2,9 +2,11 @@
 
 from __future__ import annotations
 
+import os
 import sys
 
 from . import adapters, build, export_all, export_table, verify
+from .io.paths import ROOT
 from .io.store import ExportFormat
 
 
@@ -13,6 +15,31 @@ def _option(args: list[str], flag: str, default: str | None = None) -> str | Non
         return default
     idx = args.index(flag)
     return args[idx + 1] if idx + 1 < len(args) else default
+
+
+def _has_census_api_key() -> bool:
+    """Check if CENSUS_API_KEY is set in environment or .env file."""
+    if os.environ.get("CENSUS_API_KEY"):
+        return True
+    env_path = ROOT / ".env"
+    if env_path.exists():
+        for line in env_path.read_text().splitlines():
+            line = line.strip()
+            if line and not line.startswith("#") and "=" in line:
+                key, value = line.split("=", 1)
+                if key.strip() == "CENSUS_API_KEY" and value.strip():
+                    return True
+    return False
+
+
+def _prompt_census_key() -> bool:
+    """Prompt user if CENSUS_API_KEY is missing; return True to continue, False to exit."""
+    print("⚠ CENSUS_API_KEY not found in environment or .env")
+    print("  This is required to build the optional 'county_equity' table.")
+    print("  You can set it at https://api.census.gov/data/key_signup.html")
+    print()
+    response = input("Proceed without building county_equity? (y/n) ").strip().lower()
+    return response in {"y", "yes"}
 
 
 def _export_targets(args: list[str]) -> list[str]:
@@ -46,7 +73,7 @@ def main() -> int:
         print(
             "Usage: libbee <command> [options]\n\n"
             "Commands:\n"
-            "  build [--force]    Build and conform all data tables (default command)\n"
+            "  build [--force] [--quiet]  Build and conform all data tables (default command)\n"
             "  verify             Verify that local conformed tables match MANIFEST.json fingerprint\n"
             "  adapters           List all registered data source adapters and their provenance\n"
             "  export [tables...] Export one or more conformed tables to CSV or JSON\n"
@@ -130,7 +157,14 @@ def main() -> int:
             print(f"Error launching marimo: {e}")
             return 1
 
-    build(force="--force" in args)
+    # Gate: check for CENSUS_API_KEY before building
+    if not _has_census_api_key():
+        if not _prompt_census_key():
+            print("Aborted.")
+            return 1
+
+    quiet = "--quiet" in args
+    build(force="--force" in args, verbose=not quiet)
     return 0
 
 

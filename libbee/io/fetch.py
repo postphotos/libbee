@@ -19,8 +19,10 @@ def cached(url: str, name: str, *, browser_ua: bool = False, min_size: int = 1) 
     """Download `url` to data/raw/`name` once and return the path (cached thereafter)."""
     dest = RAW / name
     if dest.exists() and dest.stat().st_size >= min_size:
+        print(f"    ↳ {name} (cached)")
         return dest
     dest.parent.mkdir(parents=True, exist_ok=True)
+    print(f"    ↓ {name}")
     headers = {"User-Agent": UA} if browser_ua else {}
     req = urllib.request.Request(url, headers=headers)
     tmp = dest.with_name(f".{dest.name}.tmp")

@@ -72,7 +72,7 @@ def fetch_acs(year: int) -> pl.DataFrame | None:
     # first fetch (and so the result can't drift if the API changes). The key is only needed once.
     _cache = _REPO / "data" / "raw" / "census" / f"acs5_{year}_counties.json"
     if _cache.exists():
-        print(f"Census · ACS5 {year} (cached)")
+        print(f"    ↳ acs5_{year}_counties.json (cached)")
         raw = json.loads(_cache.read_text())
     else:
         key = _census_api_key()
@@ -83,11 +83,16 @@ def fetch_acs(year: int) -> pl.DataFrame | None:
             return None
         _get = ",".join(["NAME", *ACS_VARS])
         url = f"https://api.census.gov/data/{year}/acs/acs5?get={_get}&for=county:*&key={key}"
-        print(f"Census · ACS5 {year}, all counties (fetching)")
+        print(f"    ↓ acs5_{year}_counties.json (Census API)")
         _bytes = urllib.request.urlopen(url, timeout=90).read()
         _cache.parent.mkdir(parents=True, exist_ok=True)
         _cache.write_bytes(_bytes)
-        raw = json.loads(_bytes)
+        try:
+            raw = json.loads(_bytes)
+        except json.JSONDecodeError:
+            print("⚠ Census API returned invalid JSON (invalid key, rate limit, or API error)")
+            print("  Response:", _bytes.decode('utf-8', errors='replace')[:200])
+            return None
     df = pl.DataFrame(raw[1:], schema=raw[0], orient="row")
     df = df.with_columns([pl.col(c).cast(pl.Float64, strict=False) for c in ACS_VARS])
     df = df.with_columns(
@@ -104,7 +109,7 @@ def fetch_acs(year: int) -> pl.DataFrame | None:
 
 
 def fetch_density() -> pl.DataFrame:
-    print("Census · gazetteer county land area (keyless)")
+    print(f"    ↓ 2019_Gaz_counties_national.zip (Census Gazetteer)")
     raw = urllib.request.urlopen(GAZ_URL, timeout=60).read()
     with zipfile.ZipFile(io.BytesIO(raw)) as zf:
         _name = next(n for n in zf.namelist() if n.endswith(".txt"))
@@ -118,6 +123,7 @@ def fetch_density() -> pl.DataFrame:
 
 
 def fetch_library_counties(year: int) -> pl.DataFrame:
+    print(f"    ↓ IMLS {year} (library data)")
     yrs = {y: (u, h) for y, u, h in bd.IMLS_YEARS}
     df = mp.load_year_normalized(year, *yrs[year])  # national per-library, has st/co + metrics
     lib = (
@@ -149,16 +155,17 @@ def fetch_library_counties(year: int) -> pl.DataFrame:
             ((pl.col("central") + pl.col("branches")) / pl.col("popu_lsa") * 100_000).alias("outlets_per_100k"),
         )
     )
-    print(f"Library · IMLS {year}: {lib.height} counties with library data")
+    print(f"    → {lib.height} counties")
     return lib
 
 
 def main() -> int:
     acs = fetch_acs(ACS_YEAR)
     if acs is None:
-        print("Skipping county_equity (requires CENSUS_API_KEY)")
+        print("  ⊘ county_equity skipped (CENSUS_API_KEY missing or API error)")
         return 0
     
+    print(f"  County equity: joining {acs.height} counties (Census) + library + density data")
     dens = fetch_density()
     lib = fetch_library_counties(ACS_YEAR)
     county_equity = (
@@ -169,6 +176,7 @@ def main() -> int:
                 & pl.col("poverty").is_not_null())
         .sort("popu_lsa", descending=True)
     )
+    print(f"  Writing {county_equity.height} counties to county_equity table")
     county_equity.write_database("county_equity", DB_URI, engine="adbc", if_table_exists="replace")
 
     conn = sqlite3.connect(DB_PATH)

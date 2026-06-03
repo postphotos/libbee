@@ -172,7 +172,11 @@ def test_degenerate_and_defensive_cases():
 
 def test_shap_values_explains_a_tree_model():
     """shap_values returns a (samples × features) SHAP array for a tree model, accepting either a Polars
-    frame (taken through .to_pandas()) or a raw numpy array (the else branch)."""
+    frame (taken through .to_pandas()) or a raw numpy array (the else branch).
+
+    Skipped if shap is not installed (optional, install with pip install libbee[analysis]).
+    """
+    pytest.importorskip("shap")
     from sklearn.ensemble import RandomForestRegressor
 
     Xpl = pl.DataFrame({"a": [1.0, 2.0, 3.0, 4.0, 5.0, 6.0], "b": [6.0, 5.0, 4.0, 3.0, 2.0, 1.0]})

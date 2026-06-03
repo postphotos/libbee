@@ -17,21 +17,21 @@ class TestCliMain:
         with mock.patch("sys.argv", ["libbee"]):
             with mock.patch("libbee.__main__.build") as mock_build:
                 __main__.main()
-                mock_build.assert_called_once_with(force=False)
+                mock_build.assert_called_once_with(force=False, verbose=True)
 
     def test_main_build_command(self):
         """main() accepts 'build' command."""
         with mock.patch("sys.argv", ["libbee", "build"]):
             with mock.patch("libbee.__main__.build") as mock_build:
                 __main__.main()
-                mock_build.assert_called_once_with(force=False)
+                mock_build.assert_called_once_with(force=False, verbose=True)
 
     def test_main_build_force_flag(self):
         """main() honors --force flag."""
         with mock.patch("sys.argv", ["libbee", "build", "--force"]):
             with mock.patch("libbee.__main__.build") as mock_build:
                 __main__.main()
-                mock_build.assert_called_once_with(force=True)
+                mock_build.assert_called_once_with(force=True, verbose=True)
 
     def test_main_verify_command(self):
         """main('verify') calls verify and returns status code."""

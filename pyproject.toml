@@ -1,9 +1,9 @@
 [project]
 name = "libbee"
-version = "0.0.1"
+version = "0.0.2"
 description = "US (American) public-library funding, usage, and operations + community civics data (1992–2023) — integrated from IMLS, Census, and HUD into one tidy `facts` table."
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 license = "MIT"
 license-files = ["LICENSE"]
 authors = [
@@ -43,28 +43,29 @@ dependencies = [
     "polars>=1.41.2",
     "pyarrow>=24.0.0",
     "numpy>=2.0",
-    "pandas>=2.2.0",          # adapters: ca_libpas read_html
-    "lxml>=5.0.0",            # read_html backend
-    "fastexcel>=0.10.0",      # adapters: HUD xlsx
-    "requests>=2.32",         # adapters: fetch
-    "adbc-driver-sqlite>=1.1.0",  # io.store: write_database(engine="adbc")
-    "pydantic>=2.0",          # io.schemas: metadata-level validation (schema contracts, MANIFEST)
-    "pydantic-settings>=2.0",  # io.config: validated env / credentials (CENSUS_API_KEY)
+    "pandas>=2.2.0", # adapters: ca_libpas read_html
+    "lxml>=5.0.0", # read_html backend
+    "fastexcel>=0.10.0", # adapters: HUD xlsx
+    "requests>=2.32", # adapters: fetch
+    "adbc-driver-sqlite>=1.1.0", # io.store: write_database(engine="adbc")
+    "pydantic>=2.0", # io.schemas: metadata-level validation (schema contracts, MANIFEST)
+    "pydantic-settings>=2.0", # io.config: validated env / credentials (CENSUS_API_KEY)
+    "ruff>=0.15.15",
 ]
 
 # Optional extras — the data core stays lean; opt into the heavier analytical/DB layers as needed.
 [project.optional-dependencies]
-analysis = ["scikit-learn>=1.5", "statsmodels>=0.14.0", "scipy>=1.13.0", "shap>=0.46.0"]
+analysis = ["scikit-learn>=1.5", "statsmodels>=0.14.0", "scipy>=1.13.0", "shap>=0.50"]
 duckdb = ["duckdb>=1.1"]
 notebook = ["marimo>=0.23.8", "anywidget>=0.11.0", "nbformat>=5.10.4", "docstring-to-markdown>=0.13"]
 dev = [
-    "pytest>=8.3.0", "pytest-cov>=6.0.0", "ruff>=0.9.0",
-    "scikit-learn>=1.5", "statsmodels>=0.14.0", "scipy>=1.13.0", "shap>=0.46.0",
+    "pytest>=8.3.0", "pytest-cov>=6.0.0", "ruff>=0.9.0", "pyright>=1.1.0",
+    "scikit-learn>=1.5", "statsmodels>=0.14.0", "scipy>=1.13.0",
     "duckdb>=1.1", "marimo>=0.23.8", "anywidget>=0.11.0", "nbformat>=5.10.4",
     "altair>=5.0.0",  # for the example notebook (examples/libbee_notebook.py)
 ]
 all = [
-    "scikit-learn>=1.5", "statsmodels>=0.14.0", "scipy>=1.13.0", "shap>=0.46.0",
+    "scikit-learn>=1.5", "statsmodels>=0.14.0", "scipy>=1.13.0", "shap>=0.50",
     "duckdb>=1.1", "marimo>=0.23.8", "anywidget>=0.11.0", "nbformat>=5.10.4",
 ]
 
@@ -99,7 +100,6 @@ dev = [
     "scikit-learn>=1.5",
     "statsmodels>=0.14.0",
     "scipy>=1.13.0",
-    "shap>=0.46.0",
     "duckdb>=1.1",
     "marimo>=0.23.8",
     "anywidget>=0.11.0",

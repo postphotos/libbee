@@ -494,15 +494,16 @@ def whatif_impact(base_preds, new_preds, pop, *, measures) -> pl.DataFrame:
     return pl.DataFrame(rows, schema=["measure", "base", "scenario", "delta", "pct"])
 
 
-def shap_values(model, X, *, feature_names=None) -> tuple[np.ndarray, Any]:
+def shap_values(model, X, *, feature_names=None) -> tuple[np.ndarray, Any]:  # pragma: no cover
     """Pure helper for SHAP explainability. Returns (shap_values, explainer_object).
 
     Why this exists: SHAP explainer boilerplate and feature name alignment should be consistent.
+    Requires the optional `shap` dependency (install with `pip install libbee[analysis]`).
     """
     import numpy as np
 
     try:
-        import shap
+        import shap  # type: ignore[import-untyped]
     except ModuleNotFoundError:  # pragma: no cover
         raise ImportError("shap is required for SHAP explainability. Install it with: pip install libbee[analysis]") from None
 
