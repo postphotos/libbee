@@ -1,6 +1,6 @@
 [project]
 name = "libbee"
-version = "0.0.3"
+version = "0.0.4"
 description = "US (American) public-library funding, usage, and operations + community civics data (1992–2023) — integrated from IMLS, Census, and HUD into one tidy `facts` table."
 readme = "README.md"
 requires-python = ">=3.11"
