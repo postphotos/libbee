@@ -34,6 +34,7 @@ from . import analysis, geo, inflation, metrics
 from .adapters import REGISTRY as adapters
 from .io import config, frames, schemas
 from .io.config import settings
+from .io.inspect import BuildStatus, TableHandle, list, status
 from .io.store import export_all, export_table, load, scan, tables
 from .pipeline import build, verify
 
@@ -42,6 +43,8 @@ __all__ = [
     "adapters",
     "build",
     "verify",
+    "status",
+    "list",
     "load",
     "scan",
     "tables",
@@ -49,6 +52,9 @@ __all__ = [
     "export_all",
     "facts",
     "geo_dim",
+    # introspection helpers
+    "BuildStatus",
+    "TableHandle",
     # analytical surface (pure, render-free)
     "analysis",
     "frames",

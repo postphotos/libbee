@@ -193,6 +193,8 @@ class TestTopLevelAPI:
             "adapters",
             "build",
             "verify",
+            "status",
+            "list",
             "load",
             "scan",
             "tables",
@@ -200,6 +202,9 @@ class TestTopLevelAPI:
             "export_all",
             "facts",
             "geo_dim",
+            # introspection helpers
+            "BuildStatus",
+            "TableHandle",
             # analytical surface (pure, render-free)
             "analysis",
             "frames",

@@ -35,7 +35,7 @@ The `facts` table melts all sources into a highly compressible, predictable stru
 ## 2. Environment Variables
 
 * **`LIBBEE_DATA`**: Directory where Parquet tables are cached. Defaults to `./data` in your CWD.
-* **`CENSUS_API_KEY`**: Optional. Get one for free from the [US Census Bureau](https://api.census.gov/data/key_signup.html) to download ACS metrics. It caches locally on the first run, so you only need it once.
+* **`CENSUS_API_KEY`**: **Dev-only.** You do *not* need it to use libbee — loading prebuilt data and building every other table works without it. It's required only to (re)build the optional `county_equity` table from the Census API (e.g. when regenerating the bundled data / building the wheel). Get one free from the [US Census Bureau](https://api.census.gov/data/key_signup.html); it caches locally on the first run, so you only need it once.
 
 ---
 
