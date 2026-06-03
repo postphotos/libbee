@@ -21,7 +21,7 @@ Working directly with the raw source data for public libraries is notoriously pa
 * **Geospatial nightmares:** Joining library panel data against Census or HUD datasets requires cross-walking mismatched boundaries.
 * **Formatting mess:** The raw data is scattered across 100+ MB of ASCII, Windows-1252, and UTF-8 encoded ZIPs, DBFs, and binary Excel files.
 
-`libbee` automates the downloading, cleaning, and conforming. It maps the entities, fixes the nulls, normalizes the encodings, and packs everything into fast, columnar Parquet tables (via Polars/PyArrow) that take up about 11 MB on disk.
+`libbee` automates the downloading, cleaning, and conforming. It maps the entities, fixes the nulls, normalizes the encodings, and packs everything into fast, columnar Parquet tables (via Polars/PyArrow) that take up about 11 MB on disk. (Note: the raw data assets may be upwards of 200MB total.)
 
 ## Install
 
