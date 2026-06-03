@@ -67,14 +67,37 @@ def _census_api_key() -> str | None:
     return os.environ.get("CENSUS_API_KEY") or _read_dotenv_key("CENSUS_API_KEY")
 
 
+def _parse_acs(payload: bytes | str) -> list | None:
+    """Parse a raw ACS Data API response into its [header, *rows] list.
+
+    Returns None for anything that isn't a usable response — a JSON error, or valid JSON
+    that isn't the expected non-empty array-of-arrays (an HTML error page, a rate-limit
+    notice, an empty/truncated download). Callers treat None as "no data, try elsewhere".
+    """
+    try:
+        raw = json.loads(payload)
+    except json.JSONDecodeError:
+        return None
+    # The ACS Data API returns [[col, ...], [val, ...], ...]; need at least header + 1 row.
+    if not (isinstance(raw, list) and len(raw) >= 2 and isinstance(raw[0], list)):
+        return None
+    return raw
+
+
 def fetch_acs(year: int) -> pl.DataFrame | None:
     # Cache the raw ACS response to data/raw so a rebuild is self-contained & key-free after the
     # first fetch (and so the result can't drift if the API changes). The key is only needed once.
     _cache = _REPO / "data" / "raw" / "census" / f"acs5_{year}_counties.json"
+    raw = None
     if _cache.exists():
         print(f"    ↳ acs5_{year}_counties.json (cached)")
-        raw = json.loads(_cache.read_text())
-    else:
+        raw = _parse_acs(_cache.read_bytes())
+        if raw is None:
+            # A corrupt/empty/truncated cache must not crash the whole build — and left in
+            # place it would poison every future rebuild, even `--force`. Drop it and re-fetch.
+            print(f"⚠ cached {_cache.name} is corrupt — discarding and re-fetching")
+            _cache.unlink()
+    if raw is None:
         key = _census_api_key()
         if not key:
             print("⚠ Census API key missing — skipping county_equity (optional)")
@@ -85,14 +108,15 @@ def fetch_acs(year: int) -> pl.DataFrame | None:
         url = f"https://api.census.gov/data/{year}/acs/acs5?get={_get}&for=county:*&key={key}"
         print(f"    ↓ acs5_{year}_counties.json (Census API)")
         _bytes = urllib.request.urlopen(url, timeout=90).read()
+        raw = _parse_acs(_bytes)
+        if raw is None:
+            print("⚠ Census API returned invalid JSON (invalid key, rate limit, or API error)")
+            print("  Response:", _bytes.decode("utf-8", errors="replace")[:200])
+            return None
+        # Only cache a response we've validated — caching before the check is what lets a bad
+        # API body (error page, rate-limit text) get written and poison subsequent runs.
         _cache.parent.mkdir(parents=True, exist_ok=True)
         _cache.write_bytes(_bytes)
-        try:
-            raw = json.loads(_bytes)
-        except json.JSONDecodeError:
-            print("⚠ Census API returned invalid JSON (invalid key, rate limit, or API error)")
-            print("  Response:", _bytes.decode('utf-8', errors='replace')[:200])
-            return None
     df = pl.DataFrame(raw[1:], schema=raw[0], orient="row")
     df = df.with_columns([pl.col(c).cast(pl.Float64, strict=False) for c in ACS_VARS])
     df = df.with_columns(
